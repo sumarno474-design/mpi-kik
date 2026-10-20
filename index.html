@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Pembelajaran KIK - Kreativitas dalam Praktik Kewirausahaan</title>
+    <style>
+        /* CSS VARIABLES & RESET */
+        :root {
+            --primary: #2E7D32; /* Hijau Utama */
+            --primary-light: #E8F5E9;
+            --primary-dark: #1B5E20;
+            --accent: #FFD600; /* Kuning Aksen */
+            --accent-hover: #FBC02D;
+            --text-dark: #333333;
+            --text-light: #757575;
+            --bg: #F4F7F6;
+            --white: #FFFFFF;
+            --danger: #D32F2F;
+            --radius: 12px;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg); color: var(--text-dark); line-height: 1.6; }
+
+        /* LAYOUT & NAVIGATION */
+        header { background-color: var(--primary); color: var(--white); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
+        header h1 { font-size: 1.2rem; }
+        .nav-toggle { background: none; border: none; color: var(--white); font-size: 1.5rem; cursor: pointer; display: none; }
+        
+        .app-container { display: flex; max-width: 1200px; margin: 0 auto; min-height: calc(100vh - 60px); }
+        aside { width: 250px; background-color: var(--white); padding: 20px 0; border-right: 1px solid #ddd; overflow-y: auto; transition: 0.3s; }
+        aside ul { list-style: none; }
+        aside li { padding: 10px 20px; cursor: pointer; border-left: 4px solid transparent; display: flex; align-items: center; gap: 10px; font-weight: 500; color: var(--text-light); transition: 0.2s;}
+        aside li:hover { background-color: var(--primary-light); color: var(--primary); }
+        aside li.active { border-left-color: var(--primary); color: var(--primary); background-color: var(--primary-light); }
+        aside li .check { font-size: 0.8rem; color: var(--primary); display: none; }
+        aside li.completed .check { display: inline-block; }
+
+        main { flex: 1; padding: 30px; overflow-y: auto; background: var(--bg); }
+        .page { display: none; animation: fadeIn 0.4s ease; max-width: 800px; margin: 0 auto; background: var(--white); padding: 30px; border-radius: var(--radius); box-shadow: var(--shadow); }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* TYPOGRAPHY & COMPONENTS */
+        h2 { color: var(--primary); margin-bottom: 20px; border-bottom: 2px solid var(--accent); padding-bottom: 10px; display: inline-block;}
+        h3 { color: var(--primary-dark); margin: 20px 0 10px 0; }
+        p { margin-bottom: 15px; }
+        .slogan { font-style: italic; color: var(--accent); font-weight: bold; }
+        
+        .btn { background-color: var(--primary); color: var(--white); border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: bold; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+        .btn:hover { background-color: var(--primary-dark); }
+        .btn-accent { background-color: var(--accent); color: var(--text-dark); }
+        .btn-accent:hover { background-color: var(--accent-hover); }
+        .btn-outline { background-color: transparent; border: 2px solid var(--primary); color: var(--primary); }
+        .btn-outline:hover { background-color: var(--primary); color: var(--white); }
+        .btn-danger { background-color: var(--danger); }
+        
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 20px; }
+        .card { background: var(--primary-light); padding: 20px; border-radius: var(--radius); border-left: 5px solid var(--primary); transition: 0.3s; cursor: pointer; }
+        .card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+        .card-icon { font-size: 2rem; margin-bottom: 10px; }
+
+        .progress-container { width: 100%; background: #ddd; border-radius: 10px; height: 10px; margin: 20px 0; overflow: hidden; }
+        .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
+
+        input[type="text"], input[type="number"], textarea, select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; font-family: inherit; }
+        textarea { resize: vertical; min-height: 100px; }
+        
+        .alert { padding: 15px; border-radius: 8px; margin-bottom: 20px; background: #E3F2FD; color: #1565C0; border-left: 5px solid #1976D2; }
+        .alert.success { background: var(--primary-light); color: var(--primary-dark); border-color: var(--primary); }
+        .alert.warning { background: #FFF9C4; color: #F57F17; border-color: #FBC02D; }
+
+        /* INTERACTIVE ELEMENTS */
+        .flow-step { background: var(--white); border: 2px solid var(--primary); padding: 15px; border-radius: var(--radius); margin-bottom: 10px; cursor: pointer; transition: 0.3s; }
+        .flow-step:hover { background: var(--primary-light); }
+        .flow-content { display: none; padding: 10px 0; color: var(--text-light); border-top: 1px dashed #ccc; margin-top: 10px; }
+        
+        .checklist-item { display: flex; align-items: center; gap: 15px; padding: 12px; background: #fafafa; border-radius: 8px; margin-bottom: 10px; border: 1px solid #eee; }
+        .checklist-item input { width: 20px; height: 20px; cursor: pointer; accent-color: var(--primary); }
+
+        .quiz-option { display: block; padding: 12px; margin-bottom: 10px; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+        .quiz-option:hover { border-color: var(--primary); background: var(--primary-light); }
+        .quiz-option.selected { border-color: var(--primary); background: var(--primary-light); font-weight: bold; }
+        .quiz-option.correct { border-color: var(--primary); background: var(--primary-light); color: var(--primary-dark); }
+        .quiz-option.wrong { border-color: var(--danger); background: #FFEBEE; color: var(--danger); }
+
+        /* PRINT STYLES */
+        @media print {
+            header, aside, .btn { display: none !important; }
+            .app-container, main { display: block; width: 100%; max-width: 100%; margin: 0; padding: 0; }
+            .page { box-shadow: none; border: none; padding: 0; margin: 0; }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .app-container { flex-direction: column; }
+            .nav-toggle { display: block; }
+            aside { width: 100%; display: none; border-bottom: 2px solid var(--primary); }
+            aside.show { display: block; }
+            main { padding: 15px; }
+            .page { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <h1>🌱 Media Pembelajaran KIK</h1>
+            <small class="slogan">Beriman – Berkarakter – Siap Kerja</small>
+        </div>
+        <button class="nav-toggle" onclick="toggleNav()">☰</button>
+    </header>
+
+    <div class="app-container">
+        <aside id="sidebar">
+            <ul id="navList">
+                <!-- Navigasi digenerate via JS -->
+            </ul>
+        </aside>
+
+        <main id="app">
+            <!-- HALAMAN 1: PEMBUKA -->
+            <section id="page-pembuka" class="page active">
+                <div style="text-align: center; margin-top: 50px;">
+                    <h1 style="color: var(--primary); font-size: 2.5rem; margin-bottom: 10px;">Mengaplikasikan Kreativitas dalam Praktik Kewirausahaan</h1>
+                    <p style="font-size: 1.2rem; color: var(--text-light);">Mata Pelajaran KIK | Kelas XI SMK Fase F | Agribisnis (ATPH)</p>
+                    <p style="margin-bottom: 30px;">Alokasi Waktu: 3 JP (135 Menit)</p>
+                    
+                    <div style="max-width: 400px; margin: 0 auto 20px; text-align: left;">
+                        <label>Nama Murid (Opsional):</label>
+                        <input type="text" id="inputNama" placeholder="Masukkan nama Anda...">
+                    </div>
+                    
+                    <button class="btn btn-accent" style="font-size: 1.2rem; padding: 15px 40px;" onclick="mulaiBelajar()">Mulai Belajar 🚀</button>
+                    <br><br>
+                    <button class="btn btn-outline" onclick="goToPage('page-guru')" style="font-size: 0.8rem;">👨‍🏫 Akses Guru</button>
+                </div>
+            </section>
+
+            <!-- HALAMAN 2: BERANDA -->
+            <section id="page-beranda" class="page">
+                <h2>Beranda Pembelajaran</h2>
+                <p>Halo <strong id="displayName">Murid</strong>! Selamat datang di modul interaktif ini. Di sini kamu akan belajar menjadi wirausahawan agribisnis yang kreatif.</p>
+                
+                <div class="alert">
+                    <strong>🎯 Tujuan Pembelajaran:</strong><br>
+                    Kamu mampu menjelaskan kreativitas, menemukan peluang usaha, menerapkan teknik SCAMPER, merancang produk, menghitung laba, dan menguji kelayakan ide.
+                </div>
+
+                <h3>Progres Belajarmu: <span id="progressText">0%</span></h3>
+                <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+
+                <h3>Peta Materi</h3>
+                <div class="card-grid">
+                    <div class="card" onclick="goToPage('page-materi1')">
+                        <div class="card-icon">💡</div>
+                        <h4>1. Konsep Dasar</h4>
+                        <p>Apa itu kreativitas & inovasi?</p>
+                    </div>
+                    <div class="card" onclick="goToPage('page-materi3')">
+                        <div class="card-icon">🗺️</div>
+                        <h4>2. Langkah Mengembangkan Ide</h4>
+                        <p>Proses kreatif wirausaha.</p>
+                    </div>
+                    <div class="card" onclick="goToPage('page-scamper')">
+                        <div class="card-icon">🛠️</div>
+                        <h4>3. Teknik SCAMPER</h4>
+                        <p>Cara ampuh modifikasi ide.</p>
+                    </div>
+                    <div class="card" onclick="goToPage('page-simulasi')">
+                        <div class="card-icon">🧮</div>
+                        <h4>4. Simulasi Usaha</h4>
+                        <p>Kalkulator biaya dan laba.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- HALAMAN 3: MATERI 1 - KONSEP DASAR -->
+            <section id="page-materi1" class="page">
+                <h2>Konsep Dasar</h2>
+                <p>Banyak yang mengira kreativitas dan inovasi itu sama. Mari kita lihat bedanya dalam dunia wirausaha.</p>
+                
+                <div class="card-grid">
+                    <div class="card" style="border-left-color: var(--accent);">
+                        <h3>Kreativitas 💡</h3>
+                        <p>Kemampuan <strong>menghasilkan ide</strong> atau gagasan baru. <br><i>Contoh: Memikirkan cara agar sayuran tahan lama.</i></p>
+                    </div>
+                    <div class="card" style="border-left-color: var(--primary);">
+                        <h3>Inovasi 🚀</h3>
+                        <p>Proses <strong>menerapkan ide</strong> tersebut menjadi produk nyata. <br><i>Contoh: Membuat mesin kemas kedap udara.</i></p>
+                    </div>
+                    <div class="card" style="border-left-color: #1976D2;">
+                        <h3>Kewirausahaan 💼</h3>
+                        <p>Membawa inovasi tersebut ke <strong>pasar untuk meraih nilai/laba</strong>. <br><i>Contoh: Menjual sayur vakum ke supermarket.</i></p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top:30px;">Mengapa Wirausaha Harus Kreatif?</h3>
+                <ul>
+                    <li>Membedakan produk dari pesaing (Ciri khas).</li>
+                    <li>Meningkatkan nilai jual produk.</li>
+                    <li>Mengatasi masalah konsumen.</li>
+                    <li>Menghemat sumber daya (efisiensi bahan).</li>
+                </ul>
+                <br>
+                <button class="btn" onclick="goToPage('page-materi2')">Selanjutnya: Sumber Ide ➡️</button>
+            </section>
+
+            <!-- HALAMAN 4: MATERI 2 - SUMBER IDE -->
+            <section id="page-materi2" class="page">
+                <h2>Darimana Ide Berasal?</h2>
+                <p>Ide usaha tidak turun dari langit. Ide terbaik biasanya datang dari hal-hal di sekitarmu.</p>
+                
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>1. Masalah Konsumen 😠</h4>
+                        <p>Orang sibuk tidak sempat potong sayur. <br><strong>Ide ATPH:</strong> Jual sayur potong siap masak.</p>
+                    </div>
+                    <div class="card">
+                        <h4>2. Bahan Melimpah 🍂</h4>
+                        <p>Daun kering menumpuk di kebun. <br><strong>Ide ATPH:</strong> Olah menjadi kompos premium.</p>
+                    </div>
+                    <div class="card">
+                        <h4>3. Tren Pasar 📈</h4>
+                        <p>Gaya hidup sehat meningkat. <br><strong>Ide ATPH:</strong> Paket sayur hidroponik bebas pestisida.</p>
+                    </div>
+                    <div class="card">
+                        <h4>4. Keahlian Pribadi 🛠️</h4>
+                        <p>Kamu pintar merangkai barang. <br><strong>Ide Umum:</strong> Jasa buket hadiah sayuran unik.</p>
+                    </div>
+                </div>
+                <br>
+                <button class="btn btn-outline" onclick="goToPage('page-materi1')">⬅️ Sebelumnya</button>
+                <button class="btn" onclick="goToPage('page-materi3')">Selanjutnya: Langkah Ide ➡️</button>
+            </section>
+
+            <!-- HALAMAN 5: MATERI 3 - LANGKAH -->
+            <section id="page-materi3" class="page">
+                <h2>Langkah Mengembangkan Ide</h2>
+                <p>Klik setiap tahapan di bawah ini untuk melihat penjelasannya.</p>
+
+                <div class="flow-step" onclick="toggleFlow(this)">
+                    <strong>1. Temukan Masalah 🔍</strong>
+                    <div class="flow-content">Amati lingkungan. Apa yang sering dikeluhkan pembeli atau petani? Contoh: Pupuk kimia mahal.</div>
+                </div>
+                <div class="flow-step" onclick="toggleFlow(this)">
+                    <strong>2. Hasilkan Minimal 3 Ide 💡</strong>
+                    <div class="flow-content">Jangan berhenti di satu ide. 1) Buat pupuk cair dari leri, 2) Kompos daun, 3) Kerjasama ternak.</div>
+                </div>
+                <div class="flow-step" onclick="toggleFlow(this)">
+                    <strong>3. Pilih Ide yang Layak ✅</strong>
+                    <div class="flow-content">Pilih yang bahannya mudah didapat dan pasarnya ada.</div>
+                </div>
+                <div class="flow-step" onclick="toggleFlow(this)">
+                    <strong>4. Buat Prototipe (Contoh) 📦</strong>
+                    <div class="flow-content">Buat 1-2 botol pupuk cair dulu, desain kemasan sederhana.</div>
+                </div>
+                <div class="flow-step" onclick="toggleFlow(this)">
+                    <strong>5. Uji & Perbaiki 🧪</strong>
+                    <div class="flow-content">Berikan ke petani tetangga, minta umpan balik. Perbaiki baunya jika terlalu menyengat.</div>
+                </div>
+
+                <br>
+                <button class="btn" onclick="goToPage('page-brainstorming')">Selanjutnya: Brainstorming ➡️</button>
+            </section>
+
+            <!-- HALAMAN 6: BRAINSTORMING -->
+            <section id="page-brainstorming" class="page">
+                <h2>Praktik Brainstorming</h2>
+                <p><strong>Brainstorming</strong> adalah teknik mengumpulkan ide sebanyak mungkin tanpa langsung menghakimi (menilai ide itu buruk/baik). Biarkan otakmu liar!</p>
+                
+                <div class="alert warning">
+                    <strong>Kasus ATPH:</strong> Hasil panen tomat melimpah, pasar sedang sepi, harga anjlok, dan tomat cepat busuk. Apa ide kreatifmu untuk mengolah/menjual tomat ini?
+                </div>
+
+                <textarea id="bsInput" placeholder="Ketik idemu di sini... (Contoh: Dibuat selai tomat pedas)"></textarea>
+                <button class="btn btn-accent" onclick="tambahIdeBS()">Kirim Ide</button>
+
+                <div style="margin-top: 20px;">
+                    <h3>Daftar Idemu:</h3>
+                    <ul id="bsList" style="margin-left: 20px;"></ul>
+                </div>
+                
+                <br>
+                <button class="btn" onclick="goToPage('page-scamper')">Selanjutnya: SCAMPER ➡️</button>
+            </section>
+
+            <!-- HALAMAN 7: SCAMPER -->
+            <section id="page-scamper" class="page">
+                <h2>Teknik SCAMPER</h2>
+                <p>SCAMPER adalah 7 cara ajaib untuk memodifikasi produk yang sudah ada menjadi produk baru yang inovatif. Klik pada teknik untuk melihat contoh ATPH.</p>
+
+                <div class="card-grid" id="scamperGrid">
+                    <!-- Digenerate via JS -->
+                </div>
+                <br>
+                <button class="btn" onclick="goToPage('page-materi6')">Selanjutnya: Contoh Usaha ➡️</button>
+            </section>
+
+            <!-- HALAMAN 8: CONTOH UMUM -->
+            <section id="page-materi6" class="page">
+                <h2>Contoh Ide Usaha Kreatif (Umum)</h2>
+                
+                <div class="card">
+                    <h3>1. Makanan Ringan Kemasan Praktis</h3>
+                    <p><strong>Masalah:</strong> Orang repot makan cemilan berkuah/kotor saat bekerja.<br>
+                    <strong>Solusi:</strong> Makaroni dalam botol <i>ziplock</i> atau <i>shaker</i>.<br>
+                    <strong>Nilai Tambah:</strong> Mudah dibawa, tangan tidak kotor.</p>
+                </div><br>
+                <div class="card">
+                    <h3>2. Kerajinan Kertas Layak Pakai</h3>
+                    <p><strong>Masalah:</strong> Limbah kertas ujian/koran menumpuk.<br>
+                    <strong>Solusi:</strong> Dilebur, dicetak menjadi tas belanja atau pot semai.<br>
+                    <strong>Nilai Tambah:</strong> Ramah lingkungan (eco-friendly).</p>
+                </div><br>
+                <div class="card">
+                    <h3>3. Jasa Paket Hadiah (Hampers)</h3>
+                    <p><strong>Masalah:</strong> Orang bingung mencari kado yang pas dengan dana terbatas.<br>
+                    <strong>Solusi:</strong> Jasa merakit hadiah sesuai tema (warna/hobi) dan dana pembeli.<br>
+                    <strong>Nilai Tambah:</strong> Personal dan tidak repot.</p>
+                </div>
+
+                <br>
+                <button class="btn" onclick="goToPage('page-materi7')">Selanjutnya: Usaha ATPH ➡️</button>
+            </section>
+
+            <!-- HALAMAN 9: CONTOH ATPH -->
+            <section id="page-materi7" class="page">
+                <h2>Contoh Ide Usaha Kreatif (ATPH)</h2>
+                
+                <div class="card" style="border-left-color: var(--primary);">
+                    <h3>🥬 Paket Sayuran Siap Masak</h3>
+                    <p><strong>Masalah:</strong> Ibu muda bekerja tidak punya waktu memotong dan menakar bumbu sayur sop.<br>
+                    <strong>Solusi:</strong> Menjual paket sayur sop yang sudah dicuci, dipotong, lengkap dengan bumbu racik kering.<br>
+                    <strong>Target:</strong> Perumahan padat, ibu pekerja.<br>
+                    <strong>Risiko:</strong> Mudah basi. (Solusi: Penyimpanan suhu dingin / *pre-order*).</p>
+                </div><br>
+                <div class="card" style="border-left-color: var(--primary);">
+                    <h3>🌱 Paket Grow Kit (Bibit + Media)</h3>
+                    <p><strong>Masalah:</strong> Warga kota ingin menanam tapi bingung mencari pot, tanah, dan bibit secara terpisah.<br>
+                    <strong>Solusi:</strong> Satu paket berisi pot ramah lingkungan, media tanam cocopeat, bibit, dan instruksi perawatan via QR Code.<br>
+                    <strong>Nilai Tambah:</strong> Pengalaman edukatif, praktis.</p>
+                </div><br>
+                <div class="card" style="border-left-color: var(--primary);">
+                    <h3>🍂 Kompos Organik Aromatik</h3>
+                    <p><strong>Masalah:</strong> Banyak yang enggan pakai kompos karena bau tidak sedap.<br>
+                    <strong>Solusi:</strong> Mengolah sampah organik ATPH dan menambahkan serbuk gergaji/daun pandan agar tidak berbau busuk, dikemas rapi.<br>
+                    <strong>Nilai Tambah:</strong> Cocok untuk tanaman hias dalam ruangan.</p>
+                </div>
+
+                <br>
+                <button class="btn" onclick="goToPage('page-kelayakan')">Selanjutnya: Uji Kelayakan ➡️</button>
+            </section>
+
+            <!-- HALAMAN 10: UJI KELAYAKAN -->
+            <section id="page-kelayakan" class="page">
+                <h2>Checklist Uji Kelayakan Ide</h2>
+                <p>Punya ide bagus? Tunggu dulu! Centang daftar di bawah ini untuk memastikan idemu layak dijalankan.</p>
+
+                <div id="checklistContainer">
+                    <div class="checklist-item"><input type="checkbox" onchange="checkKelayakan()"> <label><strong>Manfaat:</strong> Produk ini memecahkan masalah konsumen.</label></div>
+                    <div class="checklist-item"><input type="checkbox" onchange="checkKelayakan()"> <label><strong>Keunikan:</strong> Punya beda dengan pesaing di pasar.</label></div>
+                    <div class="checklist-item"><input type="checkbox" onchange="checkKelayakan()"> <label><strong>Produksi:</strong> Saya tahu cara membuat dan mencari bahannya.</label></div>
+                    <div class="checklist-item"><input type="checkbox" onchange="checkKelayakan()"> <label><strong>Pasar:</strong> Jelas siapa yang akan membeli produk ini.</label></div>
+                    <div class="checklist-item"><input type="checkbox" onchange="checkKelayakan()"> <label><strong>Ekonomi:</strong> Harga jual bisa menutupi modal (menguntungkan).</label></div>
+                    <div class="checklist-item"><input type="checkbox" onchange="checkKelayakan()"> <label><strong>Keamanan & Lingkungan:</strong> Tidak berbahaya dan tidak merusak alam.</label></div>
+                </div>
+                
+                <div id="kelayakanResult" class="alert success" style="display:none; margin-top:20px;">
+                    🎉 <strong>Luar biasa!</strong> Jika semua kriteria terpenuhi, idemu sangat layak untuk diwujudkan!
+                </div>
+
+                <br>
+                <button class="btn" onclick="goToPage('page-simulasi')">Selanjutnya: Simulasi Usaha ➡️</button>
+            </section>
+
+            <!-- HALAMAN 11: SIMULASI -->
+            <section id="page-simulasi" class="page">
+                <h2>Simulasi Usaha (Kalkulator)</h2>
+                <p>Mari kita hitung modal dan target keuntungan dari idemu.</p>
+                <div class="alert warning">
+                    <i>Catatan: Ini adalah hitungan dasar. Dalam aslinya, kamu harus memasukkan biaya tenaga kerja, transportasi, penyusutan alat, dan risiko produk rusak.</i>
+                </div>
+
+                <div style="background: var(--primary-light); padding: 20px; border-radius: var(--radius);">
+                    <label>Total Biaya Produksi (Bahan, Kemasan, dll) - Rupiah</label>
+                    <input type="number" id="simBiaya" value="100000" min="0" oninput="hitungSimulasi()">
+                    
+                    <label>Jumlah Produk yang Dihasilkan (Paket/Unit)</label>
+                    <input type="number" id="simJumlah" value="10" min="1" oninput="hitungSimulasi()">
+                    
+                    <label>Rencana Harga Jual per Produk - Rupiah</label>
+                    <input type="number" id="simHarga" value="15000" min="0" oninput="hitungSimulasi()">
+
+                    <hr style="margin: 20px 0; border: 1px solid #ccc;">
+                    
+                    <h3>📊 Hasil Perhitungan:</h3>
+                    <p><strong>Biaya per Unit:</strong> <span id="resHPP" style="font-weight:bold;">Rp 0</span> <br><small>(Rumus: Total Biaya / Jumlah Produk)</small></p>
+                    <p><strong>Pendapatan Kotor:</strong> <span id="resPendapatan" style="font-weight:bold;">Rp 0</span> <br><small>(Rumus: Harga Jual x Jumlah Produk)</small></p>
+                    <p><strong>Laba (Sebelum Biaya Lain):</strong> <span id="resLaba" style="font-weight:bold; color:var(--primary); font-size: 1.2rem;">Rp 0</span> <br><small>(Rumus: Pendapatan - Total Biaya)</small></p>
+                </div>
+
+                <br>
+                <button class="btn" onclick="goToPage('page-lkpd')">Selanjutnya: Isi LKPD ➡️</button>
+            </section>
+
+            <!-- HALAMAN 12: LKPD -->
+            <section id="page-lkpd" class="page">
+                <h2>LKPD Digital - Merancang Usaha</h2>
+                <p>Isi form ini sesuai dengan rencana usahamu. Jawaban dapat dicetak atau disimpan sebagai PDF.</p>
+
+                <form id="lkpdForm" onsubmit="event.preventDefault(); simpanLKPD();">
+                    <label>Nama Kelompok / Individu:</label>
+                    <input type="text" id="lkpdNama" required>
+
+                    <label>1. Masalah/Kebutuhan Konsumen yang Ditemukan:</label>
+                    <textarea id="lkpdMasalah" required></textarea>
+
+                    <label>2. Minimal 3 Ide Kreatif:</label>
+                    <textarea id="lkpdIde" placeholder="1. ... 2. ... 3. ..." required></textarea>
+
+                    <label>3. Ide Terpilih & Alasannya (Uji Kelayakan):</label>
+                    <textarea id="lkpdPilihan" required></textarea>
+
+                    <label>4. Nama Produk & Keunikannya:</label>
+                    <textarea id="lkpdProduk" required></textarea>
+
+                    <label>5. Teknik SCAMPER yang dipakai (Sebutkan minimal 2):</label>
+                    <textarea id="lkpdScamper" placeholder="Contoh: Combine (menggabungkan X dan Y)..." required></textarea>
+
+                    <label>6. Rencana Keuangan Singkat:</label>
+                    <textarea id="lkpdKeuangan" placeholder="Biaya Total: Rp... Jumlah Produk: ... Harga Jual: Rp... Laba: Rp..." required></textarea>
+
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button type="submit" class="btn btn-accent">💾 Simpan Jawaban</button>
+                        <button type="button" class="btn btn-outline" onclick="cetakLKPD()">🖨️ Cetak / PDF</button>
+                        <button type="button" class="btn btn-danger" onclick="resetLKPD()">🗑️ Reset</button>
+                    </div>
+                </form>
+                <div id="lkpdMsg" class="alert success" style="display:none; margin-top:15px;">Jawaban berhasil disimpan secara lokal!</div>
+                <br>
+                <button class="btn" onclick="goToPage('page-kuis')">Selanjutnya: Kuis Latihan ➡️</button>
+            </section>
+
+            <!-- HALAMAN 13: KUIS LATIHAN -->
+            <section id="page-kuis" class="page">
+                <h2>Kuis Latihan</h2>
+                <p>Uji pemahamanmu tentang materi tadi. Kuis ini akan langsung memberikan umpan balik.</p>
+
+                <div id="kuisContainer"></div>
+                
+                <button id="btnUlangKuis" class="btn btn-outline" style="display:none; margin-top:20px;" onclick="renderKuis()">Ulangi Kuis</button>
+                <br><br>
+                <button class="btn" onclick="goToPage('page-asesmen')">Selanjutnya: Asesmen Sumatif ➡️</button>
+            </section>
+
+            <!-- HALAMAN 14: ASESMEN SUMATIF -->
+            <section id="page-asesmen" class="page">
+                <h2>Asesmen Sumatif</h2>
+                <p>Kerjakan 10 Soal Pilihan Ganda dan 2 Soal Uraian. Jawabanmu akan disimpan untuk penilaian.</p>
+                
+                <div id="asesmenIntro">
+                    <button class="btn btn-accent" onclick="mulaiAsesmen()">Mulai Ujian</button>
+                </div>
+
+                <div id="asesmenMCQArea" style="display:none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 id="mcqProgress">Soal 1 / 10</h3>
+                    </div>
+                    <div id="mcqQuestion" style="font-size: 1.1rem; margin-bottom: 15px; font-weight: 500;"></div>
+                    <div id="mcqOptions"></div>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                        <button class="btn btn-outline" onclick="prevMCQ()" id="btnPrevMCQ">Sebelumnya</button>
+                        <button class="btn btn-accent" onclick="nextMCQ()" id="btnNextMCQ">Berikutnya</button>
+                    </div>
+                </div>
+
+                <div id="asesmenEssayArea" style="display:none;">
+                    <h3>Soal Uraian (Bagian 2/2)</h3>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <p><strong>11.</strong> Rancang usaha paket bibit sayuran untuk warga yang ingin menanam di rumah. Jelaskan masalah/kebutuhan konsumen, dua ide kreatif, pilihan terbaik beserta alasan, dan cara menguji minat konsumen.</p>
+                        <textarea id="essay1" placeholder="Jawaban nomor 11..."></textarea>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <p><strong>12.</strong> Kelompok memproduksi 25 paket sayuran dengan biaya total Rp175.000. Semua terjual Rp10.000 per paket. Hitung biaya per paket, pendapatan, laba sebelum biaya lain, dan sebutkan dua cara kreatif meningkatkan nilai produk.</p>
+                        <textarea id="essay2" placeholder="Jawaban nomor 12..."></textarea>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="kumpulkanAsesmen()">Kumpulkan Semua Jawaban</button>
+                </div>
+            </section>
+
+            <!-- HALAMAN 15: HASIL & REFLEKSI -->
+            <section id="page-hasil" class="page">
+                <h2>Hasil Belajar & Refleksi</h2>
+                
+                <div class="card">
+                    <h3>Skor Pilihan Ganda: <span id="skorAkhirMCQ" style="color: var(--primary); font-size: 1.5rem;">0</span>/50</h3>
+                    <p id="pesanMotivasi"></p>
+                    <p style="color: var(--text-light); font-size: 0.9rem;">*Nilai akhir menunggu penilaian soal uraian oleh guru.</p>
+                </div>
+
+                <h3 style="margin-top:20px;">Refleksi Diri</h3>
+                <label>Apa hal baru yang saya pelajari?</label>
+                <textarea id="refBaru"></textarea>
+                
+                <label>Ide usaha apa yang ingin saya coba?</label>
+                <textarea id="refIde"></textarea>
+                
+                <label>Apa yang perlu saya perbaiki ke depannya?</label>
+                <textarea id="refPerbaiki"></textarea>
+
+                <button class="btn btn-accent" onclick="simpanRefleksi()">Simpan Refleksi</button>
+                <div id="refMsg" class="alert success" style="display:none; margin-top:10px;">Refleksi disimpan!</div>
+            </section>
+
+            <!-- HALAMAN 16: DASHBOARD GURU -->
+            <section id="page-guru" class="page">
+                <h2>Dashboard Guru</h2>
+                <div class="alert warning">Data di bawah ini dibaca secara lokal dari perangkat ini.</div>
+                
+                <div id="guruDataArea">
+                    <!-- Data will be populated here -->
+                </div>
+
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #ddd;">
+                    <h3>Penilaian Uraian (Manual)</h3>
+                    <p><strong>Uraian 1 (Maks 25 poin)</strong></p>
+                    <div style="background: #eee; padding:10px; border-radius:8px; margin-bottom: 10px;" id="viewEssay1">-</div>
+                    <input type="number" id="scoreEssay1" placeholder="Skor (0-25)" max="25" min="0">
+
+                    <p><strong>Uraian 2 (Maks 25 poin)</strong></p>
+                    <div style="background: #eee; padding:10px; border-radius:8px; margin-bottom: 10px;" id="viewEssay2">-</div>
+                    <input type="number" id="scoreEssay2" placeholder="Skor (0-25)" max="25" min="0">
+
+                    <button class="btn btn-accent" onclick="simpanNilaiGuru()">Simpan Nilai Uraian</button>
+                </div>
+            </section>
+
+            <!-- HALAMAN 17: PENUTUP -->
+            <section id="page-penutup" class="page" style="text-align: center;">
+                <h1 style="color: var(--primary); font-size: 3rem; margin-bottom: 20px;">🎉 Selamat!</h1>
+                <h2>Kamu telah menyelesaikan modul ini.</h2>
+                <br>
+                <div class="card" style="text-align: left;">
+                    <h3>Ringkasan Kunci:</h3>
+                    <p><strong>Kreativitas (Ide) ➡️ Inovasi (Penerapan) ➡️ Kewirausahaan (Pasar/Laba)</strong></p>
+                    <ul>
+                        <li>Selalu mulai dari <strong>masalah konsumen</strong>.</li>
+                        <li>Gunakan teknik seperti <strong>SCAMPER</strong> untuk mengembangkan ide.</li>
+                        <li>Jangan lupa <strong>Uji Kelayakan</strong> dan hitung biayanya.</li>
+                    </ul>
+                </div>
+                <br><br>
+                <h3 class="slogan" style="font-size: 1.5rem;">Beriman – Berkarakter – Siap Kerja</h3>
+            </section>
+
+        </main>
+    </div>
+
+<script>
+/* =========================================
+   1. DATA & STATE MANAGEMENT
+========================================= */
+const pages = [
+    { id: 'page-pembuka', title: 'Mulai', icon: '🏠' },
+    { id: 'page-beranda', title: 'Beranda', icon: '📋' },
+    { id: 'page-materi1', title: 'Konsep Dasar', icon: '💡' },
+    { id: 'page-materi2', title: 'Sumber Ide', icon: '🌱' },
+    { id: 'page-materi3', title: 'Langkah Ide', icon: '🗺️' },
+    { id: 'page-brainstorming', title: 'Brainstorming', icon: '🧠' },
+    { id: 'page-scamper', title: 'SCAMPER', icon: '🛠️' },
+    { id: 'page-materi6', title: 'Usaha Umum', icon: '🛍️' },
+    { id: 'page-materi7', title: 'Usaha ATPH', icon: '🌿' },
+    { id: 'page-kelayakan', title: 'Uji Kelayakan', icon: '✅' },
+    { id: 'page-simulasi', title: 'Simulasi Usaha', icon: '🧮' },
+    { id: 'page-lkpd', title: 'LKPD Digital', icon: '📝' },
+    { id: 'page-kuis', title: 'Kuis Latihan', icon: '🎯' },
+    { id: 'page-asesmen', title: 'Asesmen Sumatif', icon: '🏆' },
+    { id: 'page-hasil', title: 'Hasil & Refleksi', icon: '📊' },
+    { id: 'page-penutup', title: 'Penutup', icon: '🏁' },
+    { id: 'page-guru', title: 'Dashboard Guru', icon: '👨‍🏫', hidden: true }
+];
+
+let appState = JSON.parse(localStorage.getItem('kik_atph_state')) || {
+    name: '',
+    progress: [],
+    lkpd: {},
+    asesmen: { mcqAnswers: {}, mcqScore: 0, essay1: '', essay2: '', essayScore1: null, essayScore2: null, done: false },
+    refleksi: {}
+};
+
+function saveState() {
+    localStorage.setItem('kik_atph_state', JSON.stringify(appState));
+    updateUI();
+}
+
+/* =========================================
+   2. NAVIGATION & UI LOGIC
+========================================= */
+function initNav() {
+    const navList = document.getElementById('navList');
+    navList.innerHTML = '';
+    pages.forEach(p => {
+        if(p.hidden) return;
+        const li = document.createElement('li');
+        li.id = 'nav-' + p.id;
+        li.innerHTML = `${p.icon} ${p.title} <span class="check">✔️</span>`;
+        li.onclick = () => goToPage(p.id);
+        if(appState.progress.includes(p.id)) li.classList.add('completed');
+        navList.appendChild(li);
+    });
+}
+
+function goToPage(pageId) {
+    document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    
+    document.querySelectorAll('#navList li').forEach(el => el.classList.remove('active'));
+    const navEl = document.getElementById('nav-' + pageId);
+    if(navEl) navEl.classList.add('active');
+    
+    if(!appState.progress.includes(pageId) && pageId !== 'page-guru') {
+        appState.progress.push(pageId);
+        if(navEl) navEl.classList.add('completed');
+        saveState();
+    }
+    
+    // Spesifik page logic
+    if(pageId === 'page-simulasi') hitungSimulasi();
+    if(pageId === 'page-hasil') renderHasil();
+    if(pageId === 'page-guru') renderGuru();
+    
+    window.scrollTo(0,0);
+    if(window.innerWidth <= 768) toggleNav(); // close mobile nav
+}
+
+function toggleNav() {
+    document.getElementById('sidebar').classList.toggle('show');
+}
+
+function updateUI() {
+    const totalPages = pages.filter(p => !p.hidden).length;
+    const currentProgress = appState.progress.length;
+    const percent = Math.round((currentProgress / totalPages) * 100) || 0;
+    
+    document.getElementById('progressBar').style.width = percent + '%';
+    document.getElementById('progressText').innerText = percent + '%';
+    document.getElementById('displayName').innerText = appState.name || 'Murid';
+}
+
+function mulaiBelajar() {
+    const nama = document.getElementById('inputNama').value;
+    if(nama) appState.name = nama;
+    saveState();
+    goToPage('page-beranda');
+}
+
+function toggleFlow(el) {
+    const content = el.querySelector('.flow-content');
+    content.style.display = content.style.display === 'block' ? 'none' : 'block';
+}
+
+/* =========================================
+   3. BRAINSTORMING LOGIC
+========================================= */
+function tambahIdeBS() {
+    const val = document.getElementById('bsInput').value;
+    if(val.trim() === '') return;
+    const li = document.createElement('li');
+    li.style.marginBottom = '8px';
+    li.innerText = val;
+    document.getElementById('bsList').appendChild(li);
+    document.getElementById('bsInput').value = '';
+}
+
+/* =========================================
+   4. SCAMPER LOGIC
+========================================= */
+const scamperData = [
+    { t: "Substitute (Mengganti)", desc: "Mengganti bahan/proses dengan yang lebih baik.", ex: "Mengganti kemasan plastik sayur dengan daun pisang/kertas bio." },
+    { t: "Combine (Menggabungkan)", desc: "Menggabungkan 2 hal menjadi 1 nilai baru.", ex: "Menggabungkan bibit, tanah, dan pot dalam satu paket Grow Kit." },
+    { t: "Adapt (Menyesuaikan)", desc: "Menyesuaikan ide dari tempat lain.", ex: "Mengadaptasi sistem langganan koran untuk langganan sayur segar mingguan." },
+    { t: "Modify (Mengubah)", desc: "Mengubah ukuran, warna, atau bentuk.", ex: "Mengubah tomat besar menjadi tomat ceri manis untuk cemilan praktis." },
+    { t: "Put to another use", desc: "Menggunakan untuk fungsi lain.", ex: "Menjadikan limbah sabut kelapa (cocopeat) sebagai media tanam hidroponik." },
+    { t: "Eliminate (Menghilangkan)", desc: "Menghilangkan bagian yang tidak perlu.", ex: "Menjual sayur tanpa akar dan tanah agar pembeli tidak repot mencuci." },
+    { t: "Reverse (Membalik)", desc: "Menyusun ulang proses.", ex: "Biasanya panen lalu jual. Dibalik: Jual dulu (pre-order), baru dipanen sesuai pesanan." }
+];
+
+function initScamper() {
+    const grid = document.getElementById('scamperGrid');
+    scamperData.forEach((s, i) => {
+        grid.innerHTML += `
+            <div class="card" onclick="this.querySelector('.scamper-detail').style.display='block'">
+                <h4 style="color:var(--primary)">${s.t}</h4>
+                <p style="font-size:0.9rem">${s.desc}</p>
+                <div class="scamper-detail" style="display:none; margin-top:10px; padding-top:10px; border-top:1px dashed #ccc;">
+                    <strong>Contoh ATPH:</strong><br>${s.ex}
+                </div>
+            </div>
+        `;
+    });
+}
+
+/* =========================================
+   5. UJI KELAYAKAN
+========================================= */
+function checkKelayakan() {
+    const checks = document.querySelectorAll('#checklistContainer input[type="checkbox"]');
+    const allChecked = Array.from(checks).every(c => c.checked);
+    document.getElementById('kelayakanResult').style.display = allChecked ? 'block' : 'none';
+}
+
+/* =========================================
+   6. SIMULASI (KALKULATOR)
+========================================= */
+function hitungSimulasi() {
+    const biaya = parseFloat(document.getElementById('simBiaya').value) || 0;
+    const jumlah = parseFloat(document.getElementById('simJumlah').value) || 1;
+    const harga = parseFloat(document.getElementById('simHarga').value) || 0;
+
+    const hpp = biaya / (jumlah > 0 ? jumlah : 1);
+    const pendapatan = harga * jumlah;
+    const laba = pendapatan - biaya;
+
+    document.getElementById('resHPP').innerText = `Rp ${hpp.toLocaleString('id-ID')}`;
+    document.getElementById('resPendapatan').innerText = `Rp ${pendapatan.toLocaleString('id-ID')}`;
+    document.getElementById('resLaba').innerText = `Rp ${laba.toLocaleString('id-ID')}`;
+    document.getElementById('resLaba').style.color = laba >= 0 ? 'var(--primary)' : 'var(--danger)';
+}
+
+/* =========================================
+   7. LKPD LOGIC
+========================================= */
+function simpanLKPD() {
+    appState.lkpd = {
+        nama: document.getElementById('lkpdNama').value,
+        masalah: document.getElementById('lkpdMasalah').value,
+        ide: document.getElementById('lkpdIde').value,
+        pilihan: document.getElementById('lkpdPilihan').value,
+        produk: document.getElementById('lkpdProduk').value,
+        scamper: document.getElementById('lkpdScamper').value,
+        keuangan: document.getElementById('lkpdKeuangan').value
+    };
+    saveState();
+    const msg = document.getElementById('lkpdMsg');
+    msg.style.display = 'block';
+    setTimeout(() => msg.style.display = 'none', 3000);
+}
+function cetakLKPD() { window.print(); }
+function resetLKPD() {
+    if(confirm('Yakin ingin mereset LKPD?')) {
+        document.getElementById('lkpdForm').reset();
+        appState.lkpd = {};
+        saveState();
+    }
+}
+
+/* =========================================
+   8. KUIS LATIHAN LOGIC
+========================================= */
+const kuisData = [
+    { q: "Kreativitas dalam wirausaha adalah...", opt: ["Meniru persis usaha orang", "Kemampuan menghasilkan ide baru", "Menurunkan harga", "Berhenti berproduksi"], ans: 1 },
+    { q: "Teknik 'Combine' dalam SCAMPER artinya...", opt: ["Menghilangkan fitur", "Menggabungkan 2 hal", "Mengubah warna", "Menggunakan untuk fungsi lain"], ans: 1 },
+    { q: "Sebelum memproduksi massal, langkah terbaik adalah...", opt: ["Pinjam uang banyak", "Buat prototipe & uji coba", "Sewa ruko mahal", "Tebak saja maunya pasar"], ans: 1 },
+    { q: "Rumus laba kotor yang benar adalah...", opt: ["Pendapatan + Biaya", "Biaya / Jumlah", "Pendapatan - Biaya", "Harga Jual - Biaya per unit"], ans: 2 },
+    { q: "Jika ide tidak memecahkan masalah konsumen, maka...", opt: ["Tetap jual dengan harga mahal", "Kemungkinan besar tidak laku", "Konsumen akan beradaptasi", "Pemerintah akan membeli"], ans: 1 }
+];
+
+function renderKuis() {
+    const cont = document.getElementById('kuisContainer');
+    cont.innerHTML = '';
+    kuisData.forEach((k, i) => {
+        let html = `<div style="margin-bottom:20px;"><strong>${i+1}. ${k.q}</strong><div style="margin-top:10px;">`;
+        k.opt.forEach((o, j) => {
+            html += `<div class="quiz-option" onclick="cekKuis(this, ${j}, ${k.ans})">${o}</div>`;
+        });
+        html += `</div></div>`;
+        cont.innerHTML += html;
+    });
+    document.getElementById('btnUlangKuis').style.display = 'none';
+}
+
+function cekKuis(el, selected, correct) {
+    if(el.parentElement.dataset.answered) return; // prevent double click
+    el.parentElement.dataset.answered = "true";
+    const options = el.parentElement.children;
+    if(selected === correct) {
+        el.classList.add('correct');
+        el.innerHTML += " ✅ Benar!";
+    } else {
+        el.classList.add('wrong');
+        el.innerHTML += " ❌ Salah";
+        options[correct].classList.add('correct');
+    }
+    document.getElementById('btnUlangKuis').style.display = 'block';
+}
+
+/* =========================================
+   9. ASESMEN SUMATIF LOGIC
+========================================= */
+const asesmenRawData = [
+    { q: "Seorang murid menjual bibit cabai dan mengembangkan paket bibit beserta media tanam dan panduan. Tindakan tersebut menunjukkan kreativitas karena:", opt: ["A. menambah barang tanpa kebutuhan", "B. meniru pesaing", "C. menghasilkan gagasan bermanfaat bagi konsumen", "D. menaikkan harga tanpa memperbaiki produk", "E. mengurangi mutu"], ans: 2 },
+    { q: "Perbedaan kreativitas dan inovasi:", opt: ["A. kreativitas menghasilkan ide, inovasi menerapkan ide", "B. kreativitas hanya untuk perusahaan besar", "C. inovasi hanya teknologi komputer", "D. kreativitas mengurangi konsumen", "E. inovasi tidak perlu perencanaan"], ans: 0 },
+    { q: "Untuk mengetahui alasan konsumen jarang membeli sayuran, langkah awal:", opt: ["A. menaikkan harga", "B. membeli alat mahal", "C. mengganti semua produk tanpa informasi", "D. mengamati kebutuhan dan meminta umpan balik", "E. menghentikan usaha"], ans: 3 },
+    { q: "Daun kering yang sesuai untuk bahan kompos dapat dimanfaatkan dengan:", opt: ["A. membuang ke saluran air", "B. mengomposkan dengan benar", "C. mencampur sampah berbahaya", "D. membakar semua tanpa pertimbangan", "E. menyimpan selamanya"], ans: 1 },
+    { q: "Menggabungkan bibit, media tanam, dan panduan merupakan teknik:", opt: ["A. Substitute", "B. Eliminate", "C. Reverse", "D. Modify", "E. Combine"], ans: 4 },
+    { q: "Sebelum memproduksi 500 kemasan produk baru, sebaiknya:", opt: ["A. langsung produksi banyak", "B. membuat prototipe dan menguji minat", "C. menetapkan harga tanpa biaya", "D. mengabaikan konsumen", "E. meniru merek pesaing"], ans: 1 },
+    { q: "Biaya Rp120.000 menghasilkan 20 paket. Biaya per paket:", opt: ["A. Rp4.000", "B. Rp5.000", "C. Rp6.000", "D. Rp8.000", "E. Rp10.000"], ans: 2 },
+    { q: "Biaya total Rp120.000 dan 20 paket terjual Rp9.000 per paket. Laba sebelum biaya lain yang belum dihitung:", opt: ["A. Rp40.000", "B. Rp50.000", "C. Rp55.000", "D. Rp60.000", "E. Rp180.000"], ans: 3 },
+    { q: "Ide usaha paling layak adalah:", opt: ["A. menarik tanpa pembeli", "B. mahal tanpa manfaat", "C. berbeda tanpa memperhatikan mutu", "D. bermanfaat, sesuai pasar, dapat dibuat, dan layak ekonomi", "E. selalu memakai teknologi mahal"], ans: 3 },
+    { q: "Saat penjualan sayuran turun karena pesaing, tindakan terbaik:", opt: ["A. berhenti promosi", "B. mengurangi mutu", "C. menyalin pesaing sepenuhnya", "D. menaikkan harga tanpa alasan", "E. mencari pembeda dan menguji kebutuhan konsumen"], ans: 4 }
+];
+
+let asesmenShuffled = [];
+let currentMCQIndex = 0;
+
+function shuffleArray(array) {
+    let cur = array.length, temp, rand;
+    while (cur !== 0) {
+        rand = Math.floor(Math.random() * cur);
+        cur--;
+        temp = array[cur];
+        array[cur] = array[rand];
+        array[rand] = temp;
+    }
+    return array;
+}
+
+function mulaiAsesmen() {
+    if(appState.asesmen.done) {
+        if(!confirm("Anda sudah pernah mengerjakan asesmen ini. Mulai ulang? Jawaban sebelumnya akan dihapus.")) return;
+    }
+    
+    // Prepare data
+    asesmenShuffled = asesmenRawData.map((item, index) => {
+        // Map options to objects to retain correctness after shuffle
+        let ops = item.opt.map((text, i) => ({ text: text, isCorrect: i === item.ans }));
+        ops = shuffleArray(ops);
+        return { originalId: index, q: item.q, options: ops };
+    });
+    asesmenShuffled = shuffleArray(asesmenShuffled);
+    
+    appState.asesmen = { mcqAnswers: {}, mcqScore: 0, essay1: '', essay2: '', essayScore1: null, essayScore2: null, done: false };
+    currentMCQIndex = 0;
+    
+    document.getElementById('asesmenIntro').style.display = 'none';
+    document.getElementById('asesmenMCQArea').style.display = 'block';
+    renderMCQ();
+}
+
+function renderMCQ() {
+    const item = asesmenShuffled[currentMCQIndex];
+    document.getElementById('mcqProgress').innerText = `Soal Pilihan Ganda: ${currentMCQIndex + 1} / 10`;
+    document.getElementById('mcqQuestion').innerText = item.q;
+    
+    const optCont = document.getElementById('mcqOptions');
+    optCont.innerHTML = '';
+    
+    const savedAns = appState.asesmen.mcqAnswers[currentMCQIndex];
+
+    item.options.forEach((opt, idx) => {
+        const div = document.createElement('div');
+        div.className = 'quiz-option';
+        // Hapus A/B/C/D/E dari teks karena sudah diacak
+        div.innerText = opt.text.replace(/^[A-E]\.\s/, ''); 
+        if(savedAns === idx) div.classList.add('selected');
+        
+        div.onclick = () => {
+            appState.asesmen.mcqAnswers[currentMCQIndex] = idx;
+            renderMCQ(); // re-render to show selection
+        };
+        optCont.appendChild(div);
+    });
+
+    document.getElementById('btnPrevMCQ').disabled = currentMCQIndex === 0;
+    document.getElementById('btnNextMCQ').innerText = currentMCQIndex === 9 ? "Lanjut ke Uraian" : "Berikutnya";
+}
+
+function nextMCQ() {
+    if(currentMCQIndex < 9) {
+        currentMCQIndex++;
+        renderMCQ();
+    } else {
+        document.getElementById('asesmenMCQArea').style.display = 'none';
+        document.getElementById('asesmenEssayArea').style.display = 'block';
+    }
+}
+function prevMCQ() {
+    if(currentMCQIndex > 0) {
+        currentMCQIndex--;
+        renderMCQ();
+    }
+}
+
+function kumpulkanAsesmen() {
+    if(Object.keys(appState.asesmen.mcqAnswers).length < 10) {
+        if(!confirm("Ada soal pilihan ganda yang belum dijawab. Yakin kumpulkan?")) return;
+    }
+    
+    // Hitung skor MCQ (tiap soal 5 poin)
+    let score = 0;
+    asesmenShuffled.forEach((item, index) => {
+        const userIdx = appState.asesmen.mcqAnswers[index];
+        if(userIdx !== undefined && item.options[userIdx].isCorrect) {
+            score += 5;
+        }
+    });
+
+    appState.asesmen.mcqScore = score;
+    appState.asesmen.essay1 = document.getElementById('essay1').value;
+    appState.asesmen.essay2 = document.getElementById('essay2').value;
+    appState.asesmen.done = true;
+    saveState();
+    
+    goToPage('page-hasil');
+}
+
+/* =========================================
+   10. HASIL & REFLEKSI
+========================================= */
+function renderHasil() {
+    const s = appState.asesmen;
+    document.getElementById('skorAkhirMCQ').innerText = s.mcqScore;
+    
+    let msg = "";
+    if(s.mcqScore >= 40) msg = "Hebat! Pemahaman konsepmu sangat baik. Lanjutkan kreativitasmu!";
+    else if(s.mcqScore >= 25) msg = "Cukup baik, tapi yuk pelajari ulang bagian langkah ide dan kelayakan!";
+    else msg = "Jangan menyerah! Coba baca kembali materi dan kerjakan kuis latihan.";
+    document.getElementById('pesanMotivasi').innerText = msg;
+
+    // Load refleksi
+    document.getElementById('refBaru').value = appState.refleksi.baru || '';
+    document.getElementById('refIde').value = appState.refleksi.ide || '';
+    document.getElementById('refPerbaiki').value = appState.refleksi.perbaiki || '';
+}
+
+function simpanRefleksi() {
+    appState.refleksi = {
+        baru: document.getElementById('refBaru').value,
+        ide: document.getElementById('refIde').value,
+        perbaiki: document.getElementById('refPerbaiki').value
+    };
+    saveState();
+    const msg = document.getElementById('refMsg');
+    msg.style.display = 'block';
+    setTimeout(() => msg.style.display = 'none', 3000);
+}
+
+/* =========================================
+   11. DASHBOARD GURU
+========================================= */
+function renderGuru() {
+    let totalP = pages.filter(p=>!p.hidden).length;
+    let currP = appState.progress.length;
+    
+    let html = `
+        <p><strong>Nama Murid:</strong> ${appState.name || 'Belum diisi'}</p>
+        <p><strong>Progres Akses Halaman:</strong> ${currP} / ${totalP}</p>
+        <p><strong>Skor Asesmen (PG):</strong> ${appState.asesmen.mcqScore} / 50</p>
+        <hr style="margin:15px 0">
+        <h4>Ringkasan LKPD:</h4>
+        <p>Ide Terpilih: ${appState.lkpd.pilihan || '-'}</p>
+        <p>Produk: ${appState.lkpd.produk || '-'}</p>
+    `;
+    document.getElementById('guruDataArea').innerHTML = html;
+
+    document.getElementById('viewEssay1').innerText = appState.asesmen.essay1 || '- (Belum diisi) -';
+    document.getElementById('viewEssay2').innerText = appState.asesmen.essay2 || '- (Belum diisi) -';
+    document.getElementById('scoreEssay1').value = appState.asesmen.essayScore1 || '';
+    document.getElementById('scoreEssay2').value = appState.asesmen.essayScore2 || '';
+}
+
+function simpanNilaiGuru() {
+    let s1 = parseInt(document.getElementById('scoreEssay1').value) || 0;
+    let s2 = parseInt(document.getElementById('scoreEssay2').value) || 0;
+    
+    if(s1 > 25) s1 = 25;
+    if(s2 > 25) s2 = 25;
+
+    appState.asesmen.essayScore1 = s1;
+    appState.asesmen.essayScore2 = s2;
+    saveState();
+    alert(`Nilai Uraian Disimpan! Total Nilai Akhir Murid: ${appState.asesmen.mcqScore + s1 + s2}`);
+}
+
+/* =========================================
+   12. INISIALISASI
+========================================= */
+window.onload = () => {
+    initNav();
+    initScamper();
+    renderKuis();
+    updateUI();
+    
+    // Auto populate nama di form
+    if(appState.name) document.getElementById('inputNama').value = appState.name;
+    
+    // Set first page
+    goToPage('page-pembuka');
+};
+
+</script>
+</body>
+</html>
